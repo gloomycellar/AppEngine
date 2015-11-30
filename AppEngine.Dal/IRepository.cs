@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace AppEngine.Dal
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T, TKey> where T : EntityBase<TKey>
     {
-        IEnumerable<T> Get(Expression<Func<T, bool>> predicate = null);
+        Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate = null);
 
-        void Save(T entity);
+        Task Insert(T entity);
 
-        void Update(T entity);
+        Task Update(T entity);
 
-        void Delete(T entity);
+        Task Delete(T entity);
     }
 }

@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace AppEngine.Dal.Entityframework
 {
-    public class EFRepository<T> : AbstractRepository<T> 
-        where T : class
+    public class EFRepository<T, TKey> : AbstractRepository<T, TKey>
+        where T : EntityBase<TKey>
     {
+        protected bool disposed = false;
+
         private DbContext context;
         private DbSet<T> dbSet;
 
@@ -20,39 +22,39 @@ namespace AppEngine.Dal.Entityframework
             dbSet = context.Set<T>();
         }
 
-        public override IEnumerable<T> Get(Expression<Func<T, bool>> predicate = null)
+        public override async Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate = null)
         {
+            IQueryable<T> query = dbSet;
+
             if (null != predicate)
             {
-                return dbSet.Where(predicate).ToList();
+                query = query.Where(predicate);
             }
-            else
-            {
-                return dbSet.ToList();
-            }
+
+            return await query.ToListAsync();
         }
 
-        public override void Delete(T entity)
+        public override async Task Delete(T entity)
         {
             if (context.Entry(entity).State == EntityState.Detached)
             {
                 dbSet.Attach(entity);
             }
             dbSet.Remove(entity);
-            Commit();
+            await Commit();
         }
 
-        public override void Save(T entity)
+        public override async Task Insert(T entity)
         {
             dbSet.Add(entity);
-            Commit();
+            await Commit();
         }
 
-        public override void Update(T entity)
+        public override async Task Update(T entity)
         {
             dbSet.Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
-            Commit();
+            await Commit();
         }
 
         protected override void Dispose(bool disposing)
@@ -67,9 +69,9 @@ namespace AppEngine.Dal.Entityframework
             disposed = true;
         }
 
-        protected override void Commit()
+        protected override async Task Commit()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -8,18 +8,16 @@ using System.Threading.Tasks;
 
 namespace AppEngine.Dal
 {
-    public abstract class AbstractRepository<T> : IRepository<T>, IDisposable
-        where T : class
+    public abstract class AbstractRepository<T, TKey> : IRepository<T, TKey>, IDisposable
+        where T : EntityBase<TKey>
     {
-        protected bool disposed = false;
+        public abstract Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate = null);
 
-        public abstract IEnumerable<T> Get(Expression<Func<T, bool>> predicate = null);
+        public abstract Task Delete(T entity);
 
-        public abstract void Delete(T entity);
+        public abstract Task Insert(T entity);
 
-        public abstract void Save(T entity);
-
-        public abstract void Update(T entity);
+        public abstract Task Update(T entity);
 
         public void Dispose()
         {
@@ -29,6 +27,6 @@ namespace AppEngine.Dal
 
         protected abstract void Dispose(bool disposing);
 
-        protected abstract void Commit();
+        protected abstract Task Commit();
     }
 }
