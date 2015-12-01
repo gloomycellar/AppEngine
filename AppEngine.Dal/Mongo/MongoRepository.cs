@@ -5,11 +5,12 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using AppEngine.Dal.Mongo;
 
 namespace AppEngine.Dal.MongoDB
 {
-    class MongoRepository<T> : AbstractRepository<T, string>
-        where T : EntityBase<string>
+    class MongoRepository<T> : Repository<T, ObjectId>
+        where T : MongoEntity
     {
         private MongoDatabaseBase database;
         private MongoCollectionBase<T> collection;
@@ -19,14 +20,14 @@ namespace AppEngine.Dal.MongoDB
             throw new NotImplementedException();
         }
 
-        public override Task Delete(T entity)
+        public override async Task Delete(T entity)
         {
-            throw new NotImplementedException();
+            await collection.DeleteOneAsync(x => x.Id == entity.Id);
         }
 
-        public override Task Insert(T entity)
+        public override async Task Insert(T entity)
         {
-            throw new NotImplementedException();
+            await collection.InsertOneAsync(entity);
         }
 
         public override Task Update(T entity)

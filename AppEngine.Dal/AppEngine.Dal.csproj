@@ -61,10 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractRepository.cs" />
+    <Compile Include="Repository.cs" />
     <Compile Include="EntityBase.cs" />
+    <Compile Include="Entityframework\EFEntity.cs" />
     <Compile Include="Entityframework\EFRepository.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="Mongo\MongoEntity.cs" />
     <Compile Include="Mongo\MongoRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace AppEngine.Dal.Entityframework
 {
-    public class EFRepository<T, TKey> : AbstractRepository<T, TKey>
-        where T : EntityBase<TKey>
+    public class EFRepository<T, TKey> : Repository<T, TKey>
+        where T : EFEntity<TKey>
     {
         protected bool disposed = false;
 

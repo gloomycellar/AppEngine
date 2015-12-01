@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AppEngine.Dal
 {
-    public abstract class AbstractRepository<T, TKey> : IRepository<T, TKey>, IDisposable
+    public abstract class Repository<T, TKey> : IRepository<T, TKey>, IDisposable
         where T : EntityBase<TKey>
     {
         public abstract Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate = null);
